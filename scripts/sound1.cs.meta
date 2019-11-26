@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 820e82c0c093ea94398b46c6a60ef25f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - koloda_sound: {fileID: 8300000, guid: 33e52b3e87a884d4c98cfe245f418959, type: 3}
+  - take_sound: {fileID: 8300000, guid: 8a4bae4d5f3f4154aaf70c24fbf6ba5f, type: 3}
+  - put_sound: {fileID: 8300000, guid: 6b537d41e563e9b4da3a680d5b95c723, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 97ac41170fe59db4d951efe970513709
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - trr: {fileID: 8300000, guid: 33e52b3e87a884d4c98cfe245f418959, type: 3}
+  - spriteRubashka: {fileID: 21300104, guid: e8065eb86448c06438e65d33e255ce40, type: 3}
+  - place: {instanceID: 0}
+  - place_deck_tuz: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

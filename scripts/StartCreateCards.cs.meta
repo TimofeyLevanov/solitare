@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9f638351462835442a47bff0ad565625
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - place_deck: {fileID: 4765450181026768579, guid: 1ab9f68eec5e30d4788941589859d86d,
+      type: 3}
+  - place: {fileID: 6968427578495337969, guid: 51da5fbd22448d14e82c34ebe81cff43, type: 3}
+  - buby: {instanceID: 0}
+  - piki: {instanceID: 0}
+  - sprite: {fileID: 21300000, guid: 503c002ede1e79d49bf6de84d46ab153, type: 3}
+  - deck: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
