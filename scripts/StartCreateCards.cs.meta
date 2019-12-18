@@ -7,9 +7,13 @@ MonoImporter:
   - place_deck: {fileID: 4765450181026768579, guid: 1ab9f68eec5e30d4788941589859d86d,
       type: 3}
   - place: {fileID: 6968427578495337969, guid: 51da5fbd22448d14e82c34ebe81cff43, type: 3}
-  - buby: {instanceID: 0}
-  - piki: {instanceID: 0}
-  - sprite: {fileID: 21300000, guid: 503c002ede1e79d49bf6de84d46ab153, type: 3}
+  - buby: {fileID: 615963009049123363, guid: e91a460f6786c154593b3a4102349c15, type: 3}
+  - piki: {fileID: 8385091381380278470, guid: 0bd8813ab9b2ac44ca8a529a7b0fe753, type: 3}
+  - "\u0447\u0435\u0440\u0432\u0438": {fileID: 6724436703275244978, guid: 851c18b2092ef3046bce6210f203e807,
+      type: 3}
+  - "\u0442\u0440\u0435\u0444\u044B": {fileID: 2614926051164278424, guid: e0818fed408223b478952cc94eae735f,
+      type: 3}
+  - sprite: {fileID: 21300104, guid: e8065eb86448c06438e65d33e255ce40, type: 3}
   - deck: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
