@@ -17,7 +17,7 @@ public class StartCreateCards : MonoBehaviour
     public Transform deck;//Родитель для всех карт оствашихся после раскладки.
 
     public Stack<Transform> PlaceDeck = new Stack<Transform>(); //стэк карт для колоды.
-    public Stack<Transform> PlaceDeckNext = new Stack<Transform>();//стэк карт колоды, куда перекладываются карты, после открытия рубашки в основной колоде.
+    public Stack<Transform> PlaceDeckNext = new Stack<Transform>();//стек карт колоды, куда перекладываются карты, после открытия рубашки в основной колоде.
     //переменные для складывания карт по масти. туз, двойка, тройка....король. Выиграш.
     public Stack<Transform> finalPlace1 = new Stack<Transform>();
     public Stack<Transform> finalPlace2 = new Stack<Transform>();
@@ -26,7 +26,7 @@ public class StartCreateCards : MonoBehaviour
     //при смене спрайта карты на рубашку, сюда записываются их лицевые спрайты, что бы потом их найти. Можно заменить на HashMap, или создать класс для создания объекта карт.
     public List<Sprite> sprites = new List<Sprite>();
 
-    GameObject CurrentCard;
+    GameObject CurrentCard; // текущая карта
     Transform CurrentCardTransform; // текущая карта Transform, что бы иметь доступ к коардинатам.
     Transform placeForCard; // Объкт на сцене, на котором лежат карты.
 
@@ -50,8 +50,7 @@ public class StartCreateCards : MonoBehaviour
     }
     // Создаем коллекцию всех карт, что бы их можно было перемешать.
     private void createCard(Transform suit){
-      
-        for (int j = 0; j < 13; j++)
+        for (int j = 0; j < suit.childCount; j++)
         {
             AllCards.Add(suit.GetChild(j)); 
         }
@@ -81,7 +80,7 @@ public class StartCreateCards : MonoBehaviour
     }
     private void layOutCards(){
        int count_z = 0; //коардината карт z, отвечающая за слои карт. 
-       int amountPlace = 7;//места под раскладывания карт. 
+       int amountPlace = 7;//места под раскладывание карт. 
        //раскладываем карты по одной на каждое место, затем по одной на шесть мест, на пять...на  одно.
         for (int i = 0; i < amountPlace; i++)
         {
@@ -123,4 +122,3 @@ public class StartCreateCards : MonoBehaviour
         //return array;
     }
 }
-
