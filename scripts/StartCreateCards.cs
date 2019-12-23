@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class StartCreateCards : MonoBehaviour
 {
-    int count = 0;//счетчик карт.
+    int count = 0;// счетчик карт.
 
     public Transform place; // родитель мест под карты, через него мы выходим на них.
     public Transform buby;
@@ -14,34 +14,33 @@ public class StartCreateCards : MonoBehaviour
     public Transform трефы;
 
     public Sprite sprite; // рубашка.
-    public Transform deck;//Родитель для всех карт оствашихся после раскладки.
+    public Transform deck;// Родитель для всех карт оствашихся после раскладки.
 
     public Stack<Transform> PlaceDeck = new Stack<Transform>(); //стэк карт для колоды.
     public Stack<Transform> PlaceDeckNext = new Stack<Transform>();//стек карт колоды, куда перекладываются карты, после открытия рубашки в основной колоде.
-    //переменные для складывания карт по масти. туз, двойка, тройка....король. Выиграш.
+    // переменные для складывания карт по масти. туз, двойка, тройка....король. Выиграш.
     public Stack<Transform> finalPlace1 = new Stack<Transform>();
     public Stack<Transform> finalPlace2 = new Stack<Transform>();
     public Stack<Transform> finalPlace3 = new Stack<Transform>();
     public Stack<Transform> finalPlace4 = new Stack<Transform>();
-    //при смене спрайта карты на рубашку, сюда записываются их лицевые спрайты, что бы потом их найти. Можно заменить на HashMap, или создать класс для создания объекта карт.
+    // при смене спрайта карты на рубашку, сюда записываются их лицевые спрайты, что бы потом их найти. Можно заменить на HashMap, 
+    // или создать класс для создания объекта карт, но придется переписывать весь код.
     public List<Sprite> sprites = new List<Sprite>();
+    List<Transform> AllCards = new List<Transform>(); 
 
     GameObject CurrentCard; // текущая карта
     Transform CurrentCardTransform; // текущая карта Transform, что бы иметь доступ к коардинатам.
     Transform placeForCard; // Объкт на сцене, на котором лежат карты.
 
-    List<Transform> AllCards = new List<Transform>(); 
-    List<GameObject> places = new List<GameObject>();
-
-    //В Unity3D запускается автоматически при запуске игры.
+    // В Unity3D запускается автоматически при запуске игры.
     void Start()
     {
-        //объединяю карты в одну коллекцию, что бы их перемешать, и разложить в случайном порядке.
+        // объединяю карты в одну коллекцию, что бы их перемешать, и разложить в случайном порядке.
         createCard(buby.transform);
         createCard(piki.transform);
         createCard(черви.transform);
         createCard(трефы.transform);
-        //перемешиваю карты случайным образом.
+        // перемешиваю карты случайным образом.
         randomCards(AllCards);
       
         layOutCards();
