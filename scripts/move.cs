@@ -46,8 +46,6 @@ public class move : MonoBehaviour
 
     GameObject camer;
     List<GameObject> placeNumber = new List<GameObject>();
-    List<GameObject> cards = new List<GameObject>();
-    List<GameObject> cards1 = new List<GameObject>();
     List<GameObject> cards_isTrigger_true = new List<GameObject>();
     List<GameObject> place_isTrigger_true = new List<GameObject>();
     List<Sprite> sprites = new List<Sprite>();
@@ -69,6 +67,7 @@ public class move : MonoBehaviour
     public Stack<bool> comeBackDeck;
     public Stack<bool> changeRubashkaDeckCards;
     StartCreateCards колода;
+    StaticValues staticvalues;
 
     bool comeBackDeckBool = false;
     bool changeRubashkaDeckCardsBool = false;
@@ -80,7 +79,8 @@ public class move : MonoBehaviour
         deck = GameObject.Find("колода").gameObject;
         place_deck = GameObject.Find("place_deck").gameObject;
         place = GameObject.Find("place").gameObject;
-
+        
+        staticvalues = camer.GetComponent<StaticValues>();
         колода = deck.GetComponent<StartCreateCards>();
 
         finalPlace1 = колода.finalPlace1;
@@ -91,14 +91,14 @@ public class move : MonoBehaviour
         placeDeckNext = колода.PlaceDeckNext;
         placeDeck = колода.PlaceDeck;
 
-        BackMoveParents = колода.BackMoveParents;
-        BackMoveName = колода.BackMoveName;
-        BackMoveCurrentParents = колода.BackMoveCurrentParents;
-        ChangeBackFace = колода.ChangeBackFace;
-        comeBackDeck = колода.comeBackDeck;
-        changeRubashkaDeckCards = колода.changeRubashkaDeckCards;
-        thisCard = колода.thisCard;
-        lastPosition = колода.lastPosition;
+        BackMoveParents = staticvalues.BackMoveParents;
+        BackMoveName = staticvalues.BackMoveName;
+        BackMoveCurrentParents = staticvalues.BackMoveCurrentParents;
+        ChangeBackFace = staticvalues.ChangeBackFace;
+        comeBackDeck = staticvalues.comeBackDeck;
+        changeRubashkaDeckCards = staticvalues.changeRubashkaDeckCards;
+        thisCard = staticvalues.thisCard;
+        lastPosition = staticvalues.lastPosition;
         place_deck_tuz = GameObject.Find("GameObject").gameObject;//место под складывания колод
 
         finalParent1 = place_deck_tuz.transform.GetChild(0);
@@ -106,14 +106,10 @@ public class move : MonoBehaviour
         finalParent3 = place_deck_tuz.transform.GetChild(2);
         finalParent4 = place_deck_tuz.transform.GetChild(3);
 
-        cards1 = колода.cards;
-        cards = new List<GameObject>(cards1);
+
         sprites = колода.sprites;
         place = колода.place.gameObject;
-        for (int i = 1; i < 8; i++)
-        {
-            cards.Add(place.transform.Find(i.ToString()).gameObject);
-        }
+    
         ChildrenTrueCardsDeck(place_deck);
     }
     bool parentFinalPlace()
@@ -147,10 +143,11 @@ public class move : MonoBehaviour
     void OnMouseDown()//зажал лкм
     {
 
-        camer.GetComponent<sound1>().take();
+       
         iinitialization();//сохраняем состояние карт, для возврата к их исходному состоянию.
         if (!thisDeckCards)//карта не относится к колоде(та что справа, все остальные карты не разложенные, ну ты понял)
         {
+            camer.GetComponent<sound1>().take();
             cardsIsTriggerAddArray();//определяем на какие карты можно положить карту, создаём массив этих карт.
             SaveLastValue(); //Сохраняем состояние карт перед ходом.
 
@@ -160,10 +157,10 @@ public class move : MonoBehaviour
                 sortingOrderChildren();//sortingOrder++ изменение родителя на текущую карту.
             }//только для рабочих карт, 7 столбцов.
 
-            if (mouseStop)
-            {
+           // if (mouseStop)
+            //{
                 MouseDown = true;
-            }//для того что бы в update можно было тоскать карту при зажатой клавише.
+            //}//для того что бы в update можно было тоскать карту при зажатой клавише.
         }
     }
     void OnMouseUp()//отпустил лкм
@@ -823,13 +820,9 @@ public class move : MonoBehaviour
             int z_count = -1;
             for (; 0 < placeDeckNext.Count;)
             {
-                // placeDeckNext.Peek().GetComponent<move>().mouseStop = false;
-
-                // placeDeckNext.Peek().GetComponent<BoxCollider2D>().enabled = false;
-               // Transform lastChildDeck = deck.transform.GetChild(deck.transform.childCount - 1);
 
                 placeDeckNext.Peek().GetComponent<move>().thisDeckCards = true;
-                //lastChildDeck.GetComponent<move>().thisDeckCards = true;
+                //lastChildDeck.GetComponentGetComponent<move>().thisDeckCards = true;
                 placeDeckNext.Peek().transform.parent = deck.transform;
                // lastChildDeck.parent = deck.transform;
                 placeDeckNext.Peek().position = new Vector3(deck.transform.position.x, deck.transform.position.y, z_count);

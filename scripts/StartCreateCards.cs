@@ -5,79 +5,112 @@ using UnityEngine;
 
 public class StartCreateCards : MonoBehaviour
 {
-    int testBullshit = 0;
-    public int CountAntibag1 = 0;
-    public int CountAntibag2 = 0;
+    int count = 0;//счетчик карт.
 
-    public Transform place_deck;
-    public Transform place;
+    public Transform place; // родитель мест под карты, через него мы выходим на них.
     public Transform buby;
     public Transform piki;
     public Transform черви;
     public Transform трефы;
 
-    public Sprite sprite;
-    public Transform deck;
-    public int count = 0;
-    int recursionLevel = 0;
+    public Sprite sprite; // рубашка.
+    public Transform deck;//Родитель для всех карт оствашихся после раскладки.
 
-    public Stack<Transform> PlaceDeck = new Stack<Transform>();
-    public Stack<Transform> PlaceDeckNext = new Stack<Transform>();
-
+    public Stack<Transform> PlaceDeck = new Stack<Transform>(); //стэк карт для колоды.
+    public Stack<Transform> PlaceDeckNext = new Stack<Transform>();//стэк карт колоды, куда перекладываются карты, после открытия рубашки в основной колоде.
+    //переменные для складывания карт по масти. туз, двойка, тройка....король. Выиграш.
     public Stack<Transform> finalPlace1 = new Stack<Transform>();
     public Stack<Transform> finalPlace2 = new Stack<Transform>();
     public Stack<Transform> finalPlace3 = new Stack<Transform>();
     public Stack<Transform> finalPlace4 = new Stack<Transform>();
-
+    //при смене спрайта карты на рубашку, сюда записываются их лицевые спрайты, что бы потом их найти. Можно заменить на HashMap, или создать класс для создания объекта карт.
     public List<Sprite> sprites = new List<Sprite>();
 
-    public List<Transform> place1 = new List<Transform>();
-    public List<Transform> place2 = new List<Transform>();
-    public List<Transform> place3 = new List<Transform>();
-    public List<Transform> place4 = new List<Transform>();
-    public List<Transform> place5 = new List<Transform>();
-    public List<Transform> place6 = new List<Transform>();
-    public List<Transform> place7 = new List<Transform>();
-    public List<Transform> place8 = new List<Transform>();
-
-    public Stack<Transform> BackMoveParents = new Stack<Transform>();
-    public Stack<int> BackMoveName = new Stack<int>();
-    public Stack<Transform> BackMoveCurrentParents = new Stack<Transform>();
-    public Stack<Transform> thisCard = new Stack<Transform>();
-    public Stack<bool> ChangeBackFace = new Stack<bool>();
-    public Stack<Vector3> lastPosition = new Stack<Vector3>();
-    public Stack<bool> comeBackDeck = new Stack<bool>();
-    public Stack<bool> changeRubashkaDeckCards = new Stack<bool>();
-
-    int count_z = 0;
-    int tt = 0;
-
-    bool STOP = false;
-
-    List<List<int>> identicalCount = new List<List<int>>();
-    List<List<string>> identicalLastName = new List<List<string>>();
-
-    Transform LastParentCard;
-    Transform LastChildrenCard;
-
-    string s;
-    Transform CurrentCardTransform;
-    List<Transform> AllCards = new List<Transform>();
-
     GameObject CurrentCard;
-    Transform placesForCards;
+    Transform CurrentCardTransform; // текущая карта Transform, что бы иметь доступ к коардинатам.
+    Transform placeForCard; // Объкт на сцене, на котором лежат карты.
 
-    Transform lastParent;
-    List<GameObject> thisGO = new List<GameObject>();
-    List<Transform> ThisGOparent = new List<Transform>();
-
-    List<GameObject> StackMovedCards = new List<GameObject>();
-    List<GameObject> Lastcards = new List<GameObject>();
-    List<GameObject> Lastcards1 = new List<GameObject>();
-    List<List<GameObject>> bagcontoller = new List<List<GameObject>>();
+    List<Transform> AllCards = new List<Transform>(); 
     List<GameObject> places = new List<GameObject>();
 
-    private List<Transform> randomCards(List<Transform> array)
+    //В Unity3D запускается автоматически при запуске игры.
+    void Start()
+    {
+        //объединяю карты в одну коллекцию, что бы их перемешать, и разложить в случайном порядке.
+        createCard(buby.transform);
+        createCard(piki.transform);
+        createCard(черви.transform);
+        createCard(трефы.transform);
+        //перемешиваю карты случайным образом.
+        randomCards(AllCards);
+      
+        layOutCards();
+        // все оставшиеся карты кладем в колоду.
+        layOutCardsToDeck();
+    }
+    // Создаем коллекцию всех карт, что бы их можно было перемешать.
+    private void createCard(Transform suit){
+      
+        for (int j = 0; j < 13; j++)
+        {
+            AllCards.Add(suit.GetChild(j)); 
+        }
+    }
+    // переворачиваем карту рубашкой вверх.
+    private void exchangeSprite()
+    {
+            sprites.Add(CurrentCard.GetComponent<SpriteRenderer>().sprite);
+            CurrentCard.GetComponent<SpriteRenderer>().sprite = sprite;
+            CurrentCard.GetComponent<BoxCollider2D>().enabled = false;
+    }
+    private void layOutCardsToDeck(){
+        int count_z = 0;// Коардината z на сцене, для слоёв.
+        for (int i = count; i < AllCards.Count; i++)
+        {
+            CurrentCard = Instantiate(AllCards[i].gameObject, new Vector3(deck.position.x, deck.position.y, count_z), Quaternion.identity);// создаём объкт на сцене.
+            CurrentCardTransform = CurrentCard.transform;
+
+            CurrentCardTransform.parent = deck;// присваевам всем картам общего родителя.
+            PlaceDeck.Push(CurrentCardTransform);// заполняем стек.
+            sprites.Add(CurrentCard.GetComponent<SpriteRenderer>().sprite);// Запоминаем какие спрайты нам понадобятся для открытия рубашек.
+            CurrentCard.GetComponent<SpriteRenderer>().sprite = sprite;// закрываем карту рубашкой вверх.
+            CurrentCardTransform.GetComponent<move>().thisDeckCards = true; // текущая карта принадлежит к колоде.
+            count_z--; // меняем слой.
+        }
+        CurrentCard.GetComponent<BoxCollider2D>().enabled = true; //Последнию карту в колоде делаем кликабельной.
+    }
+    private void layOutCards(){
+       int count_z = 0; //коардината карт z, отвечающая за слои карт. 
+       int amountPlace = 7;//места под раскладывания карт. 
+       //раскладываем карты по одной на каждое место, затем по одной на шесть мест, на пять...на  одно.
+        for (int i = 0; i < amountPlace; i++)
+        {
+            for (int x = i; x < amountPlace; x++)
+            {
+                CurrentCard = AllCards[ count ].gameObject;// текущая карта
+                placeForCard = place.GetChild(x);// текущее место под карту
+                CurrentCard = Instantiate(CurrentCard, new Vector3(placeForCard.position.x, placeForCard.position.y, count_z), Quaternion.identity);//создали карту ,с коардинатами места.
+                Transform CurrentCardTransform = CurrentCard.transform;
+                CurrentCardTransform.parent = placeForCard;//присвоили текущей карте родителя в качестве места.
+
+                if (i != 0){// Если карты раскладываютя поверх других, то меняим их коардинаты, взависимости от того, сколько карт уже есть.
+                    CurrentCardTransform.position = new Vector3(CurrentCardTransform.position.x, CurrentCardTransform.position.y - (0.3f * (placeForCard.childCount - 1)), count_z);
+                    Debug.Log(CurrentCardTransform.position.y);
+                }
+                if(x != i){// Если карта первая в цикле, то в текущем столбце она является последней, следоваетльно рубашка у неё должна быть открыта, для всех остальных карт заркываем рубашку.
+                    exchangeSprite();
+                }else{
+                    //если карта последняя в стобце, то активируем флажки, что бы карту можно было передвигать, и класть на них другие карты.
+                    CurrentCard.GetComponent<BoxCollider2D>().isTrigger = true;
+                    CurrentCard.GetComponent<BoxCollider2D>().enabled = true;
+                }
+                count++;// увеличиваем счетчик карт.
+            }
+            count_z--;// изменили слой, для будущих карт. Что бы карты перекрывали друг друга в правильном порядке.
+        }
+    }
+        // Перемешиваем карты.
+    private void randomCards(List<Transform> array)
     {
         for (int i = array.Count - 1; i >= 1; i--)
         {
@@ -87,82 +120,7 @@ public class StartCreateCards : MonoBehaviour
             array[j] = array[i];
             array[i] = temp;
         }
-        return array;
-    }
-
-
-    void Start()
-    {
-        //объединяю карты в одну коллекцию, что бы их перемешать, и разложить в случайном порядке.
-        createCard(buby.transform);
-        createCard(piki.transform);
-        createCard(черви.transform);
-        createCard(трефы.transform);
-        //перемешиваю карты случайным образом.
-        AllCards = randomCards(AllCards);
-
-       int count = 0;
-        for (int i = 1; i < 8; i++)
-        {
-            for (int x = i; x < 8; x++)
-            {
-                CurrentCard = AllCards[ count ].gameObject;
-                placesForCards = place.GetChild(x-1);
-                CurrentCard = Instantiate(CurrentCard, new Vector3(placesForCards.position.x, placesForCards.position.y, count_z), Quaternion.identity);
-                Transform CurrentCardTransform = CurrentCard.transform;
-
-                Debug.Log(placesForCards.childCount);
-                CurrentCardTransform.parent = placesForCards;
-
-                if (i != 1){
-                    CurrentCardTransform.position = new Vector3(CurrentCardTransform.position.x, CurrentCardTransform.position.y - (0.3f * (placesForCards.childCount - 1)), count_z);
-                    Debug.Log(CurrentCardTransform.position.y);
-                }
-                if(x != i){
-                    exchangeSprite();
-                }else{
-                    //если карта последняя в стобце, то активируем флажки, что бы карту можно было передвигать, и класть на них другие карты.
-                    CurrentCard.GetComponent<BoxCollider2D>().isTrigger = true;
-                    CurrentCard.GetComponent<BoxCollider2D>().enabled = true;
-                }
-                count++;
-                CurrentCardTransform.parent = placesForCards;
-
-            }
-            count_z--;
-        }
-        int orderCount = 2;
-        count_z = -1;
-        for (int i = count; i < AllCards.Count; i++)
-        {
-            CurrentCard = Instantiate(AllCards[i].gameObject, new Vector3(deck.position.x, deck.position.y, count_z), Quaternion.identity);
-            CurrentCardTransform = CurrentCard.transform;
-
-            CurrentCardTransform.parent = deck;
-            PlaceDeck.Push(CurrentCardTransform);
-            sprites.Add(CurrentCard.GetComponent<SpriteRenderer>().sprite);
-            CurrentCard.GetComponent<SpriteRenderer>().sprite = sprite;
-            CurrentCardTransform.GetComponent<move>().thisDeckCards = true;
-            CurrentCardTransform.GetComponent<move>().mouseStop = false;
-            orderCount++;
-            count_z--;
-        }
-        CurrentCard.GetComponent<BoxCollider2D>().enabled = true;
-            
-        count = 0;
-    }
-    private void createCard(Transform suit){
-      
-        for (int j = 0; j < 13; j++)
-        {
-            AllCards.Add(suit.GetChild(j));
-        }
-    }
-    private void exchangeSprite()
-    {
-            sprites.Add(CurrentCard.GetComponent<SpriteRenderer>().sprite);
-            CurrentCard.GetComponent<SpriteRenderer>().sprite = sprite;
-            CurrentCard.GetComponent<BoxCollider2D>().enabled = false;
+        //return array;
     }
 }
 

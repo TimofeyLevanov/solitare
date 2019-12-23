@@ -35,19 +35,22 @@ public class clicks : MonoBehaviour
     Stack<Vector3> lastPosition;
     Stack<bool> comeBackDeck;
     Stack<bool> changeRubashkaDeckCards;
-
+    GameObject camer;
+    StaticValues staticvalues;
     private void Start()
     {
         inicilization();
     }
     private void inicilization()
     {
+        camer = GameObject.Find("Camera");
         place = GameObject.Find("place").gameObject;
         help2 = GameObject.Find("колода").gameObject;
         колода = help2.GetComponent<StartCreateCards>();
+        staticvalues = camer.GetComponent<StaticValues>();
         help = help2.GetComponent<move>();
         sprites = колода.sprites;
-
+      
         placeDeckNext = колода.PlaceDeckNext;
         placeDeck = колода.PlaceDeck;
 
@@ -59,9 +62,9 @@ public class clicks : MonoBehaviour
         BackMoveCurrentParents = help.BackMoveCurrentParents;
         ChangeBackFace = help.ChangeBackFace;
         thisCard = help.thisCard;
-        lastPosition = колода.lastPosition;
-        comeBackDeck = колода.comeBackDeck;
-        changeRubashkaDeckCards = колода.changeRubashkaDeckCards;
+        lastPosition = staticvalues.lastPosition;
+        comeBackDeck = staticvalues.comeBackDeck;
+        changeRubashkaDeckCards = staticvalues.changeRubashkaDeckCards;
 
         finalPlace1 = колода.finalPlace1;
         finalPlace2 = колода.finalPlace2;

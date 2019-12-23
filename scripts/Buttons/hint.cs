@@ -5,11 +5,12 @@ using UnityEngine;
 public class Hint : MonoBehaviour
 {
     GameObject place;
-
-    public void Hint()
+    private void Start()
     {
         place = GameObject.Find("place").gameObject;
     }
+        
+    
     public void hint()
     {
      
